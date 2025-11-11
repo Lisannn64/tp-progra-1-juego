@@ -1,3 +1,5 @@
-asdsafa
-gfasdghah
-probando
+from funciones import *
+import os
+
+
+main()
