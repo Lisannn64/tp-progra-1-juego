@@ -38,27 +38,33 @@ def empezar_juego():
 
     nivel = cargar_nivel()
     planilla = cargar_planilla(nivel)
-    total = 0
+    terminado = False
 
-    while not juego_terminado(planilla):
-        print("\n==============================")
-        print(f"PUNTAJE TOTAL: {total}")
-        print("================================")
+    while not terminado:
 
         mostrar_planilla(planilla)
 
-        dados = turno_de_tiros(nivel)
+        dados_finales = turno_de_tiros(nivel)
+
+        print("Dados finales del turno: ")
+        print(representar_dados(dados_finales, nivel))
+
 
         categoria = elegir_categoria(planilla)
+        print(f"Elegiste la categoría: {categoria} ")
 
-        puntos = calcular_puntaje(categoria, dados, nivel)
-        planilla[categoria] = puntos
-        total += puntos
 
-        print(f"\nAnotaste {puntos} puntos en {categoria}! ")
+        #puntaje aún no implementado
+        planilla[categoria] = 0 #temporal
+
+        terminado = juego_terminado(planilla)
+
+        
+
+        
     
     print("JUEGO TERMINADO ")
-    print(f"Puntaje final: {total} ")
+    #print(f"Puntaje final: {total} ")
     pass
 
 def cargar_nivel():
@@ -144,6 +150,67 @@ def calcular_puntaje(categoria, dados, nivel):
     return len(set(dados))
 
 
+def cargar_planilla(nivel):
+
+    planilla = {
+        "1" : None,
+        "2" : None,
+        "3" : None,
+        "4" : None,
+        "5" : None,
+        "6" : None,
+        "Escalera" : None,
+        "Full" : None,
+        "Poker" : None,
+        "Generala" : None
+    }
+    return planilla
+
+def cargar_nivel():
+    nivel = {
+        "tematica" : ["1", "2", "3", "4", "5", "6"]
+    }
+    return nivel
+
+def tirar_dados():
+    lista = []
+    for i in range(5):
+        lista.append(random.randint(1,6))
+    return lista
+
+def representar_dados(dados, nivel):
+    tematica = nivel["tematica"]
+    resultado = []
+    for x in dados:
+        resultado.append(tematica[x-1])
+    return resultado
+
+
+def turno_de_tiros(nivel):
+    dados = tirar_dados()
+    print(f"--- PRIMER TIRO --- ")
+    print(representar_dados(dados, nivel))
+    opcion = input("Quiere volver a tirar los dados? (s/n) ")
+    while opcion.lower() not in ("s", "n"):
+        opcion = input("Quiere volver a tirar los dados? (s/n) ")
+    
+    if opcion.lower() == "s":
+        dados = tirar_dados()
+        print(f"--- SEGUNDO TIRO --- ")
+        print(representar_dados(dados, nivel))
+    else:
+        return dados
+    
+    opcion = input("Quiere tirar los dados una vez más? (s/n) ")
+    while opcion.lower() not in ("s", "n"):
+        opcion = input("Quiere tirar los dados una vez más? (s/n) ")
+
+    if opcion.lower() == "s":
+        dados = tirar_dados()
+        print(f"--- TERCER TIRO --- ")
+        print(representar_dados(dados, nivel))
+    
+    return dados
 
 def mostrar_estadisticas():
     print("Cargando estadísticas...")
