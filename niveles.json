@@ -1,0 +1,15 @@
+{
+    "tematica" : ["Maestro Jedi", "Sith", "Droide", "Nave", "Sable laser", "Yoda"],
+    "categorias" : {
+        "1": "Maestro Jedi",
+        "2": "Sith",
+        "3": "Droide",
+        "4": "Nave",
+        "5": "Sable laser",
+        "6": "Yoda",
+        "Escalera": "Camino de la fuerza",
+        "Full": "Tropas de asalto",
+        "Poker": "Poder supremo",
+        "Generala": "Estrella de la muerte"
+    }
+}

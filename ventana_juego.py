@@ -18,4 +18,4 @@ while ejecutando:
 
     reloj.tick(30) #acá van los fps
 
-pygame.quit
+pygame.quit()
