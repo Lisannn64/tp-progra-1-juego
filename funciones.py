@@ -24,7 +24,7 @@ def main():
 
 def menu():
     print(f"========================")
-    print("\t   MINI GENERALA ")
+    print("      MINI GENERALA ")
     print(f"========================")
     print("1. jugar ")
     print("2. Estadísticas ")
@@ -401,14 +401,14 @@ def mostrar_reglas():
 
     print("\n--- Categorías Especiales (Patrones): ---")
 
-    print(f" * {reglas_categorias['Escalera']} (20 pts): Secuencia de 5 dados (1-2-3-4-5 o 2-3-4-5-6). [cite: 110]")
+    print(f" * {reglas_categorias['Escalera']} (20 pts): Secuencia de 5 dados (1-2-3-4-5 o 2-3-4-5-6).")
 
-    print(f" * {reglas_categorias['Full']} (30 pts): Tres dados iguales y otros dos iguales. [cite: 111]")
+    print(f" * {reglas_categorias['Full']} (30 pts): Tres dados iguales y otros dos iguales.")
 
-    print(f" * {reglas_categorias['Poker']} (40 pts): Cuatro dados iguales. [cite: 111]")
+    print(f" * {reglas_categorias['Poker']} (40 pts): Cuatro dados iguales.")
 
-    print(f" * {reglas_categorias['Generala']} (50 pts): Cinco dados iguales. [cite: 112]")
-    print(f"   (Servida: Si es en el primer tiro, la Generala suma 100 puntos y gana la partida). [cite: 112]")
+    print(f" * {reglas_categorias['Generala']} (50 pts): Cinco dados iguales.")
+    print(f"   (Servida: Si es en el primer tiro, la Generala suma 100 puntos y gana la partida).")
 
     print("=" * 40)
     input("Presione ENTER para volver al menú...")
@@ -420,7 +420,7 @@ def mostrar_reglas():
 
 def mostrar_creditos():
     print("Cargando créditos...")
-    print( "Lisandro Nuñez - codigo de juego")
+    print( "Lisandro Nuñez - codigo de juego\n")
 
 
 

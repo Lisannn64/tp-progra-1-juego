@@ -1,10 +1,12 @@
 import pygame
+from config import *
 
 pygame.init()
 
-pantalla = pygame.display.set_mode((600,300))
-pygame.display.set_caption("Texto de prueba")
+pantalla = pygame.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
+pygame.display.set_caption(TITULO_JUEGO)
 reloj = pygame.time.Clock()
+
 
 ejecutando = True
 
@@ -13,7 +15,7 @@ while ejecutando:
         if evento.type == pygame.QUIT:
             ejecutando = False
     
-    pantalla.fill((255, 0, 0))
+    pantalla.fill((ROJO))
     pygame.display.flip()
 
     reloj.tick(30) #acá van los fps
