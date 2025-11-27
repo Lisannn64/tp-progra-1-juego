@@ -1,22 +1,43 @@
+from funciones import *
+
+
 BLANCO = (255, 255, 255)
 NEGRO = (0, 0, 0)
 ROJO = (255, 0, 0)
 VERDE = (0, 200, 0)
 AZUL_OSCURO = (1, 20, 40)
 GRIS_CLARO = (200, 200, 200)
+AMARILLO = (255, 255, 0)
+AZUL_CLARO = (50, 50, 255)
 
 
 ANCHO_VENTANA = 800
 ALTO_VENTANA = 600
 
+ANCHO_DADO = 64
+ALTO_DADO= 64
+
 FPS = 30
 TITULO_JUEGO = "MINI GENERALA TEMÁTICA - STAR WARS"
 
 
-TAMANIO_FUENTE_GRANDE = 36
-TAMANIO_FUENTE_NORMAL = 24
-TAMANIO_FUENTE_CHICA = 18
+TAMAÑO_FUENTE_GRANDE = 36
+TAMAÑO_FUENTE_NORMAL = 24
+TAMAÑO_FUENTE_CHICA = 18
 
 
-RUTA_FONDO = "assets/fondo_espacial.jpg"
-RUTA_DADOS = ["assets/dado1.png", "assets/dado2.png"]
+RUTA_FONDO = []#ruta de fondo de pantalla
+RUTA_DADOS = [
+    #dado1
+    #dado2
+    #dado3
+    #dado4
+    #dado5
+    #dado6
+]
+
+DADOS_VALORES = [1, 2, 3, 4, 5]
+DADOS_BLOQUEADOS = [False, False,False, False, False]
+PUNTAJE_TOTAL_SIMULADO = 0
+PANTALLA_SIMULADA = {"Maestro Jedi": None, "Sith": None}
+RECTS_DADOS = []
