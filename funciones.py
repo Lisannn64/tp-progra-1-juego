@@ -422,23 +422,3 @@ def mostrar_creditos():
     print("Cargando créditos...")
     print( "Lisandro Nuñez - codigo de juego\n")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

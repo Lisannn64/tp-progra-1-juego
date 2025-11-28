@@ -2,94 +2,96 @@ import pygame
 from renderizador import *
 from config import *
 from funciones import *
+from archivo_csv import *
 
-def main_grafico():
+def jugar_partida(pantalla):
     
-    pygame.init()
-
-    pantalla = pygame.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
-    pygame.display.set_caption(TITULO_JUEGO)
     reloj = pygame.time.Clock()
-
-
-    nivel = cargar_nivel()
-    PANTALLA_ACTUAL = cargar_planilla(nivel)
-
-    DADOS_VALORES = tirar_dados()
-    DADOS_BLOQUEADOS = [False] * 5
-    TIRADAS_RESTANTES = 3
-    PUNTAJE_TOTAL = 0
-    PLANILLA_ACTUAL = cargar_planilla(cargar_nivel())
-    ESTADO_JUEGO = "ESPERANDO_TIRADA"
-
-    RECTS_DADOS = []
-    RECT_BOTON_TIRAR = pygame.Rect(0, 0, 0, 0)
-    RECTS_CATEGORIAS = []
-
-
-    ejecutando = True
-
-    while ejecutando:
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                ejecutando = False
     
-            if evento.type == pygame.MOUSEBUTTONDOWN:
-                pos_clic = evento.pos
+    nivel = cargar_nivel()
+    planilla = cargar_planilla(nivel)
+    dados = tirar_dados()
+    bloqueados = [False]*5
+    tiros = 3
+    total = 0
+    nombre = ""
+    
+    estado = "TIRAR" 
+    
+    rects_dados = []
+    rect_boton = pygame.Rect(0,0,0,0)
+    rects_cats = []
+
+
+    jugando = True
+    while jugando:
+        mouse_pos = pygame.mouse.get_pos()
         
-                if RECT_BOTON_TIRAR.collidepoint(pos_clic):
-                    if ESTADO_JUEGO == "ESPERANDO_TIRADA" and TIRADAS_RESTANTES > 0:
-                        DADOS_VALORES, TIRADAS_RESTANTES, DADOS_BLOQUEADOS = manejar_tirada(
-                        DADOS_VALORES, DADOS_BLOQUEADOS, TIRADAS_RESTANTES
-                        )
+        for ev in pygame.event.get():
+            if ev.type == pygame.QUIT:
+                pygame.quit()
+                exit()
                 
-                        if TIRADAS_RESTANTES == 0:
-                            ESTADO_JUEGO = "ELEGIR_CATEGORIA"
-                            print(f"Turno final! Ahora debes hacer clic en una categoría de la planilla ")
-
-                elif ESTADO_JUEGO == "ESPERANDO_TIRADA":
-                    DADOS_BLOQUEADOS = gestionar_clic(DADOS_BLOQUEADOS, RECTS_DADOS, pos_clic)
-
-                elif ESTADO_JUEGO == "ELEGIR_CATEGORIA":
-                    for categoria, rect_cat in RECTS_CATEGORIAS:
-                        if rect_cat.collidepoint(pos_clic):
-
-                            nivel_datos = cargar_nivel()
-                            puntos = calcular_puntaje(categoria, DADOS_VALORES, nivel_datos)
-
-                            PLANILLA_ACTUAL[categoria] = puntos
-                            print(f"ANOTADO: {categoria} por {puntos} puntos.")
-
-                            nuevo_total = 0
-                            for p in PLANILLA_ACTUAL.values():
-                                if p == None:
-                                    pass
-                                else:
-                                    nuevo_total += p
-                                
-                            PUNTAJE_TOTAL = nuevo_total
-
-                            DADOS_VALORES = tirar_dados()
-                            DADOS_BLOQUEADOS = [False] * 5
-                            TIRADAS_RESTANTES = 3
-                            ESTADO_JUEGO = "ESPERANDO_TIRADA"
+            if estado == "NOMBRE":
+                if ev.type == pygame.KEYDOWN:
+                    if ev.key == pygame.K_RETURN:
+                        if nombre.strip():
+                            guardar_puntaje(nombre, total)
+                            jugando = False 
+                    elif ev.key == pygame.K_BACKSPACE:
+                        nombre = nombre[:-1]
+                    else:
+                        if len(nombre) < 12: nombre += ev.unicode
+            
+            elif ev.type == pygame.MOUSEBUTTONDOWN:
+                if estado == "TIRAR":
+                    for i, r in enumerate(rects_dados):
+                        if r.collidepoint(ev.pos):
+                            bloqueados[i] = not bloqueados[i]
+                    
+                    if rect_boton.collidepoint(ev.pos) and tiros > 0:
+                        nuevos = []
+                        for i in range(5):
+                            if bloqueados[i]: nuevos.append(dados[i])
+                            else: nuevos.append(random.randint(1,6))
+                        dados = nuevos
+                        tiros -= 1
+                        if tiros == 0: estado = "ELEGIR"
+                
+                elif estado == "ELEGIR":
+                    for cat, r in rects_cats:
+                        if r.collidepoint(ev.pos):
+                            pts = calcular_puntaje(cat, dados, nivel)
+                            planilla[cat] = pts
+                            
+                            suma = 0
+                            lleno = True
+                            for v in planilla.values():
+                                if v is None: lleno = False
+                                else: suma += v
+                            total = suma
+                            
+                            if lleno:
+                                estado = "NOMBRE"
+                            else:
+                                dados = tirar_dados()
+                                bloqueados = [False]*5
+                                tiros = 3
+                                estado = "TIRAR"
                             break
 
-    
-        pantalla.fill(ROJO)
-        RECTS_CATEGORIAS = obtener_rects_planilla(PLANILLA_ACTUAL)
-        dibujar_planilla(pantalla, PANTALLA_ACTUAL, PUNTAJE_TOTAL)
-        RECT_BOTON_TIRAR = dibujar_boton_tirar(pantalla, TIRADAS_RESTANTES)
-        RECTS_DADOS = dibujar_dados_interactivos(pantalla, DADOS_VALORES, DADOS_BLOQUEADOS)
+        if estado == "NOMBRE":
+            dibujar_pantalla_final(pantalla, total, nombre)
+        else:
+            pantalla.fill(ROJO)
+            dibujar_planilla(pantalla, planilla, total, mouse_pos, "ELEGIR_CATEGORIA" if estado == "ELEGIR" else "", dados, nivel)
+            rects_cats = obtener_rects_planilla(planilla)
+            rect_boton = dibujar_boton_tirar(pantalla, tiros)
+            rects_dados = dibujar_dados_interactivos(pantalla, dados, bloqueados)
+            
+            if estado == "ELEGIR":
+                dibujar_texto(pantalla, "Elija la categoría!", ANCHO_VENTANA-150, 200, AMARILLO, 30)
 
-        if ESTADO_JUEGO == "ELEGIR_CATEGORIA":
-            dibujar_texto(pantalla, "Elegí la categoría!", ANCHO_VENTANA - 150, 200, AMARILLO, 30)
-        
         pygame.display.flip()
-        reloj.tick(FPS) #acá van los fps
+        reloj.tick(FPS)
 
-    pygame.quit()
-
-
-if __name__ == "__main__":
-    main_grafico()
